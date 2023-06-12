@@ -70,6 +70,7 @@ class CutSet:
         return nAdded
 
     #--------------------------------------------------------------------------------------------------------------------------------------
+    
     ## Read cuts and/or CutSet meta information from a file and add them to this CutSet
     # filepath : a string file path+name to read in. If the file cannot be read, no action is taken
     # The function looks for "tags" at the beginning of line (NAME, DESCRIPTION, CUT) separated by ":" from the following associated line content
@@ -102,19 +103,21 @@ class CutSet:
 
     ## Write the CutSet to a file. File is written in the same form as importFromFile() expects
     # filepath : a file path+name to write the output to. If the file already exists, asks for approval to overwrite the file
+    # Returns True if the file is written, false otherwise
     def writeToFile(self, filepath):
         if os.path.isfile(filepath):
             approvCheck = input("ERROR: File " + filepath  + " already exists. Do you wish to overwrite? Enter (Y/N): ")
             if approvCheck.upper() != "Y":
-                return -1
+                return False
         
         with open(filepath, "W+") as file:
             file.write("#CutSet dump at " + str(datetime.now()) + "\n\n")
             file.write("NAME : " + self.name + "\n")
             file.write("DESCRIPTION : " + self.description + "\n")
-            file.write("STR : " + self.cutStr + "\n#\n")
+            file.write("CUT : " + self.cutStr + "\n#\n")
             for name, cut in enumerate(self.cuts):
                 file.write("CUT : " + name + ", " + cut[0] + ", " + cut[1] + ", " + cut[2] + "\n")
+        return True
 
     #--------------------------------------------------------------------------------------------------------------------------------------
 
